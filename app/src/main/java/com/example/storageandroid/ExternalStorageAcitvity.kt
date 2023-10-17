@@ -1,7 +1,6 @@
 package com.example.storageandroid
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -18,25 +17,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.storageandroid.ui.theme.StorageAndroidTheme
 import java.io.File
 import java.io.FileOutputStream
 
-class MainActivity : ComponentActivity() {
+
+class ExternalStorageAcitvity: ComponentActivity() {
     private val TAG = "MAINACTIVTIY"
     val fileName = "SampleFile.txt"
-
     @OptIn(ExperimentalMaterial3Api::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
         setContent {
             StorageAndroidTheme {
                 Surface(
@@ -63,8 +59,9 @@ class MainActivity : ComponentActivity() {
                             if(!inputText.value.isEmpty()) {
                                 fileExist.value = saveText(inputText.value)
                                 inputText.value = ""
-                            }else {
+                            }else{
                                 Log.i(TAG,"text empty")
+
                             }
                         }) {
                             Text(text = "Save Text")
@@ -76,15 +73,6 @@ class MainActivity : ComponentActivity() {
                         }) {
                             Text(text = "Delete File")
                         }
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Button(onClick = {
-                            Intent(this@MainActivity, ExternalStorageAcitvity::class.java).also{
-                               startActivity(it)
-                            }
-                        }) {
-                            Text(text = "go External Example")
-                        }
                     }
                 }
             }
@@ -92,17 +80,18 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun saveText(text: String): Boolean {
-        openFileOutput(fileName, Context.MODE_PRIVATE).use {
+        val file = File(getExternalFilesDir(null), fileName)
+        FileOutputStream(file).use {
             it.write(text.toByteArray())
-            Log.i(TAG, "File saved Success")
         }
+        Log.i(TAG,"path: ${file.absolutePath}")
         return true
     }
 
     private fun fileAlreadyExist(name: String): Boolean {
-        val fileList = fileList()
+        val fileList = getExternalFilesDir(null)!!.listFiles()
         for (fname in fileList) {
-            if (fname == name) {
+            if (fname.name == name) {
                 return true
             }
         }
@@ -110,7 +99,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun deleteFileWithName(name: String): Boolean {
-        val file = File(filesDir, name)
+        val file = File(getExternalFilesDir(null), name)
         return if (fileAlreadyExist(name)) {
             file.delete()
         } else {
@@ -118,4 +107,5 @@ class MainActivity : ComponentActivity() {
             false
         }
     }
+
 }
