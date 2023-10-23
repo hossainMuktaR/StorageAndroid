@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.storageandroid.presentation.files_screen.FilesScreen
 import com.example.storageandroid.presentation.images_screen.ImageScreen
 import com.example.storageandroid.ui.theme.StorageAndroidTheme
 
@@ -29,7 +30,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ImageScreen(application)
+//                    ImageScreen(application)
+                    FilesScreen(application)
                 }
             }
         }
