@@ -73,4 +73,6 @@ dependencies {
 
 //    coil for image
     implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("androidx.documentfile:documentfile:1.0.1")
+
 }
